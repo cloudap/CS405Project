@@ -10,6 +10,9 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)didReceiveTap:(UITapGestureRecognizer *)recognizer;
+
+
 
 @end
 

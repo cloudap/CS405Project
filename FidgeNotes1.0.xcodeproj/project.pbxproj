@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		218E0A2F1A0AC96A00FD2D31 /* UNNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 218E0A2E1A0AC96A00FD2D31 /* UNNote.m */; };
+		218E0A311A0ACD8E00FD2D31 /* black_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 218E0A301A0ACD8E00FD2D31 /* black_background.png */; };
 		21B5AEC019E843D60006A93C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B5AEBF19E843D60006A93C /* main.m */; };
 		21B5AEC319E843D60006A93C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B5AEC219E843D60006A93C /* AppDelegate.m */; };
 		21B5AEC619E843D60006A93C /* FidgeNotes1_0.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 21B5AEC419E843D60006A93C /* FidgeNotes1_0.xcdatamodeld */; };
@@ -15,6 +17,8 @@
 		21B5AECE19E843D60006A93C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21B5AECD19E843D60006A93C /* Images.xcassets */; };
 		21B5AED119E843D60006A93C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21B5AECF19E843D60006A93C /* LaunchScreen.xib */; };
 		21B5AEDD19E843D60006A93C /* FidgeNotes1_0Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B5AEDC19E843D60006A93C /* FidgeNotes1_0Tests.m */; };
+		21B5AEED19E84FA00006A93C /* cork-background-texture-11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 21B5AEEC19E84FA00006A93C /* cork-background-texture-11.jpg */; };
+		21B5AEEF19E84FAE0006A93C /* post-it-note-with-a-pin.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 21B5AEEE19E84FAE0006A93C /* post-it-note-with-a-pin.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +32,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		218E0A2D1A0AC96A00FD2D31 /* UNNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UNNote.h; sourceTree = "<group>"; };
+		218E0A2E1A0AC96A00FD2D31 /* UNNote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UNNote.m; sourceTree = "<group>"; };
+		218E0A301A0ACD8E00FD2D31 /* black_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_background.png; sourceTree = "<group>"; };
 		21B5AEBA19E843D60006A93C /* FidgeNotes1.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FidgeNotes1.0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21B5AEBE19E843D60006A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21B5AEBF19E843D60006A93C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -42,6 +49,8 @@
 		21B5AED619E843D60006A93C /* FidgeNotes1.0Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FidgeNotes1.0Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21B5AEDB19E843D60006A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21B5AEDC19E843D60006A93C /* FidgeNotes1_0Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FidgeNotes1_0Tests.m; sourceTree = "<group>"; };
+		21B5AEEC19E84FA00006A93C /* cork-background-texture-11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "cork-background-texture-11.jpg"; sourceTree = "<group>"; };
+		21B5AEEE19E84FAE0006A93C /* post-it-note-with-a-pin.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "post-it-note-with-a-pin.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,10 +92,15 @@
 		21B5AEBC19E843D60006A93C /* FidgeNotes1.0 */ = {
 			isa = PBXGroup;
 			children = (
+				21B5AEEE19E84FAE0006A93C /* post-it-note-with-a-pin.jpg */,
+				21B5AEEC19E84FA00006A93C /* cork-background-texture-11.jpg */,
+				218E0A301A0ACD8E00FD2D31 /* black_background.png */,
 				21B5AEC119E843D60006A93C /* AppDelegate.h */,
 				21B5AEC219E843D60006A93C /* AppDelegate.m */,
 				21B5AEC719E843D60006A93C /* ViewController.h */,
 				21B5AEC819E843D60006A93C /* ViewController.m */,
+				218E0A2D1A0AC96A00FD2D31 /* UNNote.h */,
+				218E0A2E1A0AC96A00FD2D31 /* UNNote.m */,
 				21B5AECA19E843D60006A93C /* Main.storyboard */,
 				21B5AECD19E843D60006A93C /* Images.xcassets */,
 				21B5AECF19E843D60006A93C /* LaunchScreen.xib */,
@@ -203,7 +217,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				21B5AECC19E843D60006A93C /* Main.storyboard in Resources */,
+				218E0A311A0ACD8E00FD2D31 /* black_background.png in Resources */,
 				21B5AED119E843D60006A93C /* LaunchScreen.xib in Resources */,
+				21B5AEED19E84FA00006A93C /* cork-background-texture-11.jpg in Resources */,
+				21B5AEEF19E84FAE0006A93C /* post-it-note-with-a-pin.jpg in Resources */,
 				21B5AECE19E843D60006A93C /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				218E0A2F1A0AC96A00FD2D31 /* UNNote.m in Sources */,
 				21B5AEC319E843D60006A93C /* AppDelegate.m in Sources */,
 				21B5AEC619E843D60006A93C /* FidgeNotes1_0.xcdatamodeld in Sources */,
 				21B5AEC919E843D60006A93C /* ViewController.m in Sources */,
@@ -418,6 +436,7 @@
 				21B5AEE219E843D60006A93C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		21B5AEE319E843D60006A93C /* Build configuration list for PBXNativeTarget "FidgeNotes1.0Tests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +445,7 @@
 				21B5AEE519E843D60006A93C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
