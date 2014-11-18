@@ -12,4 +12,6 @@
 
 @interface UNNote : UITextView
 
+-(id)initWithFrame:(CGRect)frame textContainer:(NSTextContainer *)textContainer withViewController:(id)controller;
+
 @end

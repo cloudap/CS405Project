@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UNNote.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<NSURLConnectionDelegate>
 
 - (IBAction)didReceiveTap:(UITapGestureRecognizer *)recognizer;
 
+- (void)getNotesFromServer;
+- (void)postNotesToServer;
 
+- (void)removeNote:(UNNote *)note;
 
 @end
 
