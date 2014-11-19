@@ -23,6 +23,8 @@
 
 	if([super initWithFrame:frame textContainer:textContainer]) {
 		NSLog(@"creating note");
+		self.backgroundColor = [UIColor yellowColor];
+		
 		UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 		[cancelButton addTarget:self action:@selector(handleExit) forControlEvents:UIControlEventTouchUpInside];
 		[cancelButton setFrame:CGRectMake(0, 0, 10, 10)];
@@ -32,6 +34,7 @@
 		[self setTag:SUBVIEW_TAG];
 		
 		self.controller  = controller;
+		[self.controller.view addSubview:self];
 	}
 	
 	return self;
@@ -39,6 +42,7 @@
 }
 
 - (void) handleExit {
+	NSLog(@"deleting note");
     UIView * subview = [self viewWithTag:SUBVIEW_TAG];
     [subview removeFromSuperview];
 	[self.controller removeNote:self];
