@@ -13,14 +13,19 @@
 @property NSMutableArray* noteTextViews;
 
 -(void)didRecieveEditingNotification:(NSNotification*)notification;
+-(void)createTable;
+
+- (void)getNotesFromServer;
+- (void)postNoteToServer:(NSUInteger)noteId;
 
 @property NSString* tablename;
+@property int boardId;
 
 @end
 
 @implementation ViewController
 
-NSString *hostname = @"http://unotey.com";
+NSString *hostname = @"http://unotey.com/";
 bool editing = false;
 NSMutableData *receivedData;
 NSURLConnection *getConnection;
@@ -33,7 +38,9 @@ NSURLConnection *postConnection;
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRecieveEditingNotification:) name:@"UITextViewTextDidBeginEditingNotification" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRecieveEditingNotification:) name:@"UITextViewTextDidEndEditingNotification" object:nil];
-	self.tablename = @"Alicia's Notes";
+	self.tablename = @"My%20Notes";
+	self.boardId = 9;
+	//[self createTable];
 	[self getNotesFromServer];
 }
 
@@ -52,6 +59,7 @@ NSURLConnection *postConnection;
 		for(UNNote *note in self.noteTextViews) {
 			[note endEditing:YES];
 		}
+		return;
 	}
 	
 	UNNote* noteTextView = [[UNNote alloc] initWithFrame:CGRectMake(touchPoint.x-10.0, touchPoint.y-10.0, 100, 100) textContainer:nil withViewController:self];
@@ -59,6 +67,7 @@ NSURLConnection *postConnection;
 	[self.noteTextViews addObject:noteTextView];
 	
 	[self.view addSubview:noteTextView];
+	[self postNoteToServer:[self.noteTextViews indexOfObject:noteTextView]];
 }
 
 -(void)didRecieveEditingNotification:(NSNotification*)notification {
@@ -68,51 +77,69 @@ NSURLConnection *postConnection;
 	} else {
 		NSLog(@"did end editing");
 		editing = false;
-		[self postNotesToServer];
+		[self postNoteToServer:[self.noteTextViews indexOfObject:notification.object]];
 	}
+}
+
+- (void)removeNote:(UNNote *)note {
+	NSLog(@"removing note");
+	[self.noteTextViews removeObject:note];
 }
 
 - (void)getNotesFromServer {
-//	NSString *request = [hostname stringByAppendingString:self.tablename];
-//	
-//	NSURLRequest *getRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:request] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-//	receivedData = [NSMutableData dataWithCapacity:0];
-//	
-//	getConnection = [[NSURLConnection alloc] initWithRequest:getRequest delegate:self];
-//	if(!getConnection) {
-//		receivedData = nil;
-//		NSLog(@"The connection to the server failed");
-//	}
-	[self connectionDidFinishLoading:postConnection];
+	NSString *request = [NSString stringWithFormat:@"%@api/boards/%d/notes/",hostname,self.boardId];
+	NSLog(@"request = %@",request);
+	
+	NSURLRequest *getRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:request] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+	receivedData = [NSMutableData dataWithCapacity:0];
+	
+	getConnection = [[NSURLConnection alloc] initWithRequest:getRequest delegate:self];
+	if(!getConnection) {
+		receivedData = nil;
+		NSLog(@"The connection to the server failed");
+	}
+	//[self connectionDidFinishLoading:postConnection];
 }
 
-- (void)postNotesToServer {
-	NSString *request = [hostname stringByAppendingString:self.tablename];
+- (void)postNoteToServer:(NSUInteger)noteId {
+/*
+url: http://unotey.com/api/boards/{board_id}/notes/{note_id}/
+method:  POST
+body required?:  YES
+body example content:  {"notes":[{"id":"3", "x_pos":"100", "y_pos":"120", "text":"blah blah blah"}]}
+*/
+	NSString *request = [NSString stringWithFormat:@"%@api/boards/%d/notes/%lu",hostname,self.boardId,(unsigned long)noteId];
+	NSLog(@"request = %@",request);
 	
 	//get the note information into a string to POST
 	NSMutableString *bodyData = [NSMutableString stringWithString:@"{"];
-	for(UNNote *note in self.noteTextViews) {
-		[bodyData appendString:[NSString stringWithFormat:@"(%f,%f,%@),", note.center.x, note.center.y, note.text]];
-	}
-	NSLog(@"POSTing %@", bodyData);
+	UNNote *note = [self.noteTextViews objectAtIndex:noteId];
+	//[bodyData appendString:[NSString stringWithFormat:@"(%f,%f,%@),", note.center.x, note.center.y, note.text]];
+	[bodyData appendString:[NSString stringWithFormat:@"{\"notes\":[{\"id\":\"%lu\", \"x_pos\":\"%d\", \"y_pos\":\"%d\", \"%@\"}]}", noteId, (int)note.center.x, (int)note.center.y, note.text]];
 	NSData *bodyDataAsData = [bodyData dataUsingEncoding:NSASCIIStringEncoding];
 	receivedData = [[NSMutableData alloc] initWithData:bodyDataAsData];
 	
-//	NSMutableURLRequest *postRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request]];
-//	[postRequest setValue:@"application/x-www-form-urlendcoded" forHTTPHeaderField:@"Content-Type"];
-//	[postRequest setHTTPMethod:@"POST"];
-//	[postRequest setHTTPBody:[NSData dataWithBytes:[bodyData UTF8String] length:strlen([bodyData UTF8String])]];
-//	
-//		receivedData = [NSMutableData dataWithCapacity:0];
-//	
-//	getConnection = [[NSURLConnection alloc] initWithRequest:postRequest delegate:self];
-//	if(!getConnection) {
-//		receivedData = nil;
-//		NSLog(@"The connection to the server failed");
-//	}
+	NSMutableURLRequest *postRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request]];
+	[postRequest setValue:@"application/x-www-form-urlendcoded" forHTTPHeaderField:@"Content-Type"];
+	[postRequest setHTTPMethod:@"POST"];
+	[postRequest setHTTPBody:[NSData dataWithBytes:[bodyData UTF8String] length:strlen([bodyData UTF8String])]];
+	
+	receivedData = [NSMutableData dataWithCapacity:0];
+	
+	NSLog(@"Request headers = %@", [postRequest allHTTPHeaderFields]);
+	NSLog(@"Request body %@", [[NSString alloc] initWithData:[postRequest HTTPBody] encoding:NSUTF8StringEncoding]);
+	postConnection = [[NSURLConnection alloc] initWithRequest:postRequest delegate:self];
+	if(!postConnection) {
+		receivedData = nil;
+		NSLog(@"The connection to the server failed");
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSHTTPURLResponse *r = (NSHTTPURLResponse *)response;
+	NSLog(@"reponse code = %ld with headerfields = %@", (long)[r statusCode],[r allHeaderFields]);
+
+
 	[receivedData setLength:0];
 }
 
@@ -128,33 +155,66 @@ NSURLConnection *postConnection;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	if(receivedData == nil) { 
 		return; 
-	}
+	} else if(connection == getConnection) {
 	
-	NSLog(@"recieved data - %@", [[NSString alloc] initWithData:receivedData encoding:NSASCIIStringEncoding]);
-	self.noteTextViews = nil;
+		NSLog(@"recieved data - %@", [[NSString alloc] initWithData:receivedData encoding:NSASCIIStringEncoding]);
+		//self.noteTextViews = nil;
 	
-	NSString *stringReturned = [[NSString alloc] initWithData:receivedData encoding:NSASCIIStringEncoding];
-	NSString *prefix = @"{(";
-	NSString *suffix = @")}"; 
-	NSRange dataRange = NSMakeRange(prefix.length, stringReturned.length - prefix.length - suffix.length);
-	NSString *notesData = [stringReturned substringWithRange:dataRange];
-	NSArray *notesArray = [notesData componentsSeparatedByString:@"),("];
-	for(NSString *noteString in notesArray) {
-		NSArray *noteArray = [noteString componentsSeparatedByString:@","];
-		CGFloat x = [[noteArray objectAtIndex:0] floatValue];
-		CGFloat y = [[noteArray objectAtIndex:1] floatValue];
-		NSString *text = [noteArray objectAtIndex:2];
+		NSString *stringReturned = [[NSString alloc] initWithData:receivedData encoding:NSASCIIStringEncoding];
+		if([stringReturned length] == 0) {
+			receivedData = nil;
+			return;
+		}
 		
-		UNNote* noteTextView = [[UNNote alloc] initWithFrame:CGRectMake(x-10.0, y-10.0, 100, 100) textContainer:nil  withViewController:self];
-		noteTextView.text = text;
-		noteTextView.backgroundColor = [UIColor yellowColor];
-		[self.noteTextViews addObject:noteTextView];
+		NSString *prefix = @"{(";
+		NSString *suffix = @")}"; 
+		NSRange dataRange = NSMakeRange(prefix.length, stringReturned.length - prefix.length - suffix.length);
+		NSString *notesData = [stringReturned substringWithRange:dataRange];
+		
+		NSArray *notesArray = [notesData componentsSeparatedByString:@"),("];
+		if([notesArray count] == 3) {
+			for(NSString *noteString in notesArray) {
+				NSArray *noteArray = [noteString componentsSeparatedByString:@","];
+				CGFloat x = [[noteArray objectAtIndex:0] floatValue];
+				CGFloat y = [[noteArray objectAtIndex:1] floatValue];
+				NSString *text = [noteArray objectAtIndex:2];
+				
+				UNNote* noteTextView = [[UNNote alloc] initWithFrame:CGRectMake(x-10.0, y-10.0, 100, 100) textContainer:nil  withViewController:self];
+				noteTextView.text = text;
+				noteTextView.backgroundColor = [UIColor yellowColor];
+				[self.noteTextViews addObject:noteTextView];
+			}
+		}
+	} else if(connection == postConnection) {
+		NSLog(@"recieved data - %@", [[NSString alloc] initWithData:receivedData encoding:NSASCIIStringEncoding]);
 	}
 	
 	receivedData = nil;
 }
 
-
+-(void)createTable {
+	NSString *request = @"http://unotey.com/api/boards/";
+	
+	//get the note information into a string to POST
+	NSString *bodyData = @"{\"boards\":[{\"id\":\"9\", \"name\":\"My Notes\"}]}";
+	NSLog(@"POSTing %@", bodyData);
+	NSData *bodyDataAsData = [bodyData dataUsingEncoding:NSASCIIStringEncoding];
+	receivedData = [[NSMutableData alloc] initWithData:bodyDataAsData];
+	
+	NSMutableURLRequest *postRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request]];
+	[postRequest setValue:@"application/x-www-form-urlendcoded" forHTTPHeaderField:@"Content-Type"];
+	[postRequest setHTTPMethod:@"POST"];
+	[postRequest setHTTPBody:[NSData dataWithBytes:[bodyData UTF8String] length:strlen([bodyData UTF8String])]];
+	
+	receivedData = [NSMutableData dataWithCapacity:0];
+	
+	NSLog(@"Request body %@", [[NSString alloc] initWithData:[postRequest HTTPBody] encoding:NSUTF8StringEncoding]);
+	postConnection = [[NSURLConnection alloc] initWithRequest:postRequest delegate:self];
+	if(!postConnection) {
+		receivedData = nil;
+		NSLog(@"The connection to the server failed");
+	}
+}
 
 
 

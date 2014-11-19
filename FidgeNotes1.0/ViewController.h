@@ -13,9 +13,6 @@
 
 - (IBAction)didReceiveTap:(UITapGestureRecognizer *)recognizer;
 
-- (void)getNotesFromServer;
-- (void)postNotesToServer;
-
 - (void)removeNote:(UNNote *)note;
 
 @end
